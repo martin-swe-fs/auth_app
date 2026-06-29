@@ -1,0 +1,7 @@
+# DS_Store is finder metadata on macOS created automatically when opening a folder in the program.
+.DS_Store
+.env
+.env.*
+*.pem
+*.log
+.vscode/
