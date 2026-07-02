@@ -2,6 +2,8 @@
 .DS_Store
 .env
 .env.*
+# Commiting an example .env file is desired for easier onboarding.
+!.env.example
 *.pem
 *.log
 .vscode/
