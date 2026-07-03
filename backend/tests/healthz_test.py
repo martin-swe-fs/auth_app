@@ -1,18 +1,21 @@
 import pytest
 from django.core.cache import cache
 from django.db import connection
+from django.test import Client
 
 
 @pytest.mark.django_db
-def test_healthz_returns_ok_when_dependencies_are_up(client) -> None:
+def test_healthz_returns_ok_when_dependencies_are_up(client: Client) -> None:
     response = client.get('/healthz')
     assert response.status_code == 200
     assert response.json() == {'db': 'ok', 'redis': 'ok'}
 
 
 @pytest.mark.django_db
-def test_healthz_returns_error_when_redis_is_down(client, monkeypatch) -> None:
-    def broken_set(*args, **kwargs) -> None:
+def test_healthz_returns_error_when_redis_is_down(
+    client: Client, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def broken_set(*args: object, **kwargs: object) -> None:
         raise ConnectionError('redis unreachable')
 
     monkeypatch.setattr(cache, 'set', broken_set)
@@ -22,8 +25,10 @@ def test_healthz_returns_error_when_redis_is_down(client, monkeypatch) -> None:
 
 
 @pytest.mark.django_db
-def test_healthz_returns_error_when_db_is_down(client, monkeypatch) -> None:
-    def broken_cursor(*args, **kwargs) -> None:
+def test_healthz_returns_error_when_db_is_down(
+    client: Client, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def broken_cursor(*args: object, **kwargs: object) -> None:
         raise ConnectionError('db unreachable')
 
     monkeypatch.setattr(connection, 'cursor', broken_cursor)
