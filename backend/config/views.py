@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.db import connection
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 
 
 def check_db() -> bool:
@@ -20,7 +20,7 @@ def check_redis() -> bool:
         return False
 
 
-def healthz(request) -> JsonResponse:
+def healthz(request: HttpRequest) -> JsonResponse:
     db_ok = check_db()
     redis_ok = check_redis()
     response_status_code = 200 if db_ok and redis_ok else 503
