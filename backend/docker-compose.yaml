@@ -11,6 +11,12 @@ services:
     environment:
       - DATABASE_URL=postgres://username:password@db:5432/dbname
       - REDIS_URL=redis://redis:6379/0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
     depends_on:
       db:
         condition: service_healthy
